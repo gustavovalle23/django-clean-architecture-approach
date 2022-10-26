@@ -1,0 +1,23 @@
+version: '3.5'
+
+services:
+  app:
+    hostname: 'book-app'
+    container_name: 'book-app'
+    ports:
+      - "4000:4000"
+      - "9229:9229"
+    volumes:
+      - .:/app
+    build:
+      dockerfile: Dockerfile
+      context: .
+    networks:
+      - local-network
+    env_file:
+      - .env
+    extra_hosts:
+      - 'host.docker.internal:172.17.0.1'
+networks:
+  local-network:
+    name: network-book-app
