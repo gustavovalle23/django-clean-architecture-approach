@@ -5,7 +5,7 @@ services:
     hostname: 'book-app'
     container_name: 'book-app'
     ports:
-      - "4000:4000"
+      - "3000:3000"
       - "9229:9229"
     volumes:
       - .:/app
@@ -37,6 +37,8 @@ services:
       KAFKA_LISTENERS: INTERNAL://:9092,OUTSIDE://:9094
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://host.docker.internal:9094
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_SCHEMA_REGISTRY_URL: "schemaregistry:8085"
+
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
   control-center:
@@ -50,6 +52,20 @@ services:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:9092'
       CONTROL_CENTER_REPLICATION_FACTOR: 1
       PORT: 9021
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:5.5.1
+    depends_on:
+      - zookeeper
+      - kafka
+    networks:
+      - local-network
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+
   kafka_ui:
     image: provectuslabs/kafka-ui:latest
     depends_on:
@@ -60,6 +76,8 @@ services:
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    networks:
+      - local-network
 networks:
   local-network:
     name: network-book-app

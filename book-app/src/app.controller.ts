@@ -2,9 +2,16 @@ import { Controller, Get } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { debug } from 'console';
 import { AppService } from './app.service';
+import {
+  SchemaRegistry,
+  SchemaType,
+  COMPATIBILITY,
+} from '@kafkajs/confluent-schema-registry';
+import { join } from 'path';
+import { readFileSync } from 'fs';
 
 class FinishBookMessage {
-  bookName: string;
+  name: string;
   days: number;
 }
 
@@ -13,12 +20,36 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  async getHello(): Promise<string> {
+    const message = this.appService.getHello();
+
+    const schemaRegistry = new SchemaRegistry(
+      { host: 'http://localhost:8081' },
+      {
+        [SchemaType.PROTOBUF]: {
+          messageName: 'Book',
+        },
+      },
+    );
+    const schema = readFileSync(join(__dirname, '../book.proto')).toString();
+    const { id: schemaRegistryId } = await schemaRegistry.register(
+      {
+        type: SchemaType.PROTOBUF,
+        schema,
+      },
+      {
+        compatibility: COMPATIBILITY.BACKWARD,
+        subject: 'book.app.Book',
+      },
+    );
+
+    const encodedMessage = schemaRegistry.encode(schemaRegistryId, { message });
+    debug('Encoded message: ', encodedMessage);
+    return message;
   }
 
   @EventPattern('finish.book')
-  finishBook(@Payload() { bookName, days }: FinishBookMessage): any {
-    debug(`Finish the book ${bookName} in ${days} days`);
+  finishBook(@Payload() { name, days }: FinishBookMessage): any {
+    debug(`Finish the book ${name} in ${days} days`);
   }
 }
