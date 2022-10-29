@@ -3,7 +3,7 @@ version: '3'
 dotenv: ['.env', '.env.test']
 
 vars:
-  LOCAL_SERVICES: "app zookeeper kafka control-center kafka_ui"
+  LOCAL_SERVICES: "app kafka schema-registry"
   BUILD_CMD: "docker-compose build --no-cache"
   RUN_CMD: "docker-compose up -d {{.LOCAL_SERVICES}}"
   STOP_CMD: "docker-compose down -v"
@@ -28,12 +28,12 @@ tasks:
   app:
     desc: Enter app bash
     cmds:
-      - '{{.BASH_CMD}}'  
+      - '{{.BASH_CMD}}'
   logs:
     desc: Docker logs
     cmds:
-      - '{{.LOGS_CMD}}'   
+      - '{{.LOGS_CMD}}'
   logs:app:
     desc: Docker app logs
     cmds:
-      - '{{.LOGS_APP_CMD}}'  
+      - '{{.LOGS_APP_CMD}}'

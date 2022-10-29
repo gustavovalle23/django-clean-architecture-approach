@@ -8,7 +8,7 @@ async function bootstrap() {
     transport: Transport.KAFKA,
     options: {
       client: {
-        brokers: ['host.docker.internal:9094'],
+        brokers: ['kafka:9092'],
       },
       consumer: {
         groupId: 'book-app-consumer-' + Math.random(),
