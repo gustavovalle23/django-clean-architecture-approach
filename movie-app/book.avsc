@@ -1,0 +1,10 @@
+{
+     "type": "record",
+     "namespace": "book.app.Book",
+     "name": "Book",
+     "version": "1",
+     "fields": [
+       { "name": "name", "type": "string", "doc": "Name of Book" },
+       { "name": "days", "type": "string", "doc": "Days of the book" }
+     ]
+}
