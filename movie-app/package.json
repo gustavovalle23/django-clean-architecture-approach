@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-	"start": "node index.js"
+    "start": "node index.js"
   },
   "author": "Gustavo Valle",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2"
+    "@kafkajs/confluent-schema-registry": "^3.3.0",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "kafka": "^0.2.3",
+    "kafkajs": "^2.2.2"
   }
 }

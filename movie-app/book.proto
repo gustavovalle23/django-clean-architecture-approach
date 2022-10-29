@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message Book {
+  string name = 1;
+  string days = 2;
+}

@@ -2,11 +2,10 @@ version: '3.5'
 
 services:
   app:
-    hostname: 'book-app'
-    container_name: 'book-app'
+    hostname: 'movie-app'
+    container_name: 'movie-app'
     ports:
       - "3000:3000"
-      - "9229:9229"
     volumes:
       - .:/app
     build:
@@ -18,66 +17,42 @@ services:
       - .env
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    depends_on:
-      - zookeeper
-    ports:
-      - "9092:9092"
-      - "9094:9094"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-      KAFKA_LISTENERS: INTERNAL://:9092,OUTSIDE://:9094
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://host.docker.internal:9094
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_SCHEMA_REGISTRY_URL: "schemaregistry:8085"
 
+  kafka:
+    image: 'vectorized/redpanda:v21.11.14'
+    hostname: "kafka"
+    container_name: "kafka"
+    command:
+      - redpanda
+      - start
+      - --smp
+      - '1'
+      - --reserve-memory
+      - 0M
+      - --overprovisioned
+      - --node-id
+      - '0'
+      - --kafka-addr
+      - INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094,PLAINTEXT://0.0.0.0:9093
+      - --advertise-kafka-addr
+      - INTERNAL://kafka:9092,OUTSIDE://host.docker.internal:9094,PLAINTEXT://kafka:9093
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
-  control-center:
-    image: confluentinc/cp-enterprise-control-center:6.0.1
-    hostname: control-center
-    depends_on:
-      - kafka
-    ports:
-      - "9021:9021"
-    environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:9092'
-      CONTROL_CENTER_REPLICATION_FACTOR: 1
-      PORT: 9021
+    networks:
+      - local-network
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.5.1
+    image: 'confluentinc/cp-schema-registry:7.0.1'
+    hostname: "schema-registry"
+    container_name: "schema-registry"
     depends_on:
-      - zookeeper
       - kafka
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: 'schema-registry'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:9093"
     networks:
       - local-network
-    ports:
-      - "8081:8081"
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
 
-  kafka_ui:
-    image: provectuslabs/kafka-ui:latest
-    depends_on:
-      - kafka
-    ports:
-      - 8080:8080
-    environment:
-      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-    networks:
-      - local-network
 networks:
   local-network:
-    name: network-book-app
+    name: network-movie-app
