@@ -1,6 +1,6 @@
 const express = require('express')
+const { encodePayload, decodePayload } = require('./schema-registry-proto-service')
 
-const { decodePayload, encodePayload } = require('./encode-message')
 
 const app = express()
 const port = 3000
