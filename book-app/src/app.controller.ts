@@ -1,29 +1,19 @@
 import { Controller, Get } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { debug } from 'console';
-import { Book } from './book';
+import { Book, BookSchemaRegistry } from './book';
 import { AppService } from './app.service';
-
-class SchemaRegistryExample {
-  encoded: Buffer;
-  decoded: Book;
-
-  constructor(encoded: Buffer, decoded: Book) {
-    this.encoded = encoded;
-    this.decoded = decoded;
-  }
-}
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  async getSchemaRegistry(): Promise<SchemaRegistryExample> {
+  async getSchemaRegistry(): Promise<BookSchemaRegistry> {
     const book = new Book('Book1', '21');
     const encodedMessage = await this.appService.encodePayload(book);
     const decodedMessage = await this.appService.decodePayload(encodedMessage);
-    return new SchemaRegistryExample(encodedMessage, decodedMessage);
+    return new BookSchemaRegistry(encodedMessage, decodedMessage);
   }
 
   @EventPattern('finish.book')

@@ -7,3 +7,13 @@ export class Book {
     this.days = days;
   }
 }
+
+export class BookSchemaRegistry {
+  encoded: Buffer;
+  decoded: Book;
+
+  constructor(encoded: Buffer, decoded: Book) {
+    this.encoded = encoded;
+    this.decoded = decoded;
+  }
+}
