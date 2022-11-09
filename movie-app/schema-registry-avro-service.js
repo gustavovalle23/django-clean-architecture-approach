@@ -1,7 +1,7 @@
 const { SchemaRegistry, SchemaType } = require('@kafkajs/confluent-schema-registry')
 
 
-const schema = {
+const schema = JSON.stringify({
 	name: 'book',
 	namespace: 'test',
 	type: 'record',
@@ -9,17 +9,17 @@ const schema = {
 		{ name: 'name', type: 'string' },
 		{ name: 'days', type: 'string' }
 	]
-}
+})
 
 const registry = () => {
 	return new SchemaRegistry({ host: 'http://schema-registry:8081/' })
 }
 
-async function encodePayload(payload) {
+const encodePayload = async (payload) => {
 	const schemaRegistry = registry()
 
 	const { id } = await schemaRegistry.register({
-		schema: JSON.stringify(schema),
+		schema,
 		type: SchemaType.AVRO
 	});
 
@@ -27,7 +27,7 @@ async function encodePayload(payload) {
 	return encodedValue
 }
 
-async function decodePayload(bufferedPayload) {
+const decodePayload = async (bufferedPayload) => {
 	const schemaRegistry = registry()
 	const decodedValue = await schemaRegistry.decode(bufferedPayload)
 	return decodedValue
