@@ -1,5 +1,17 @@
 version: '3.5'
 services:
+  app:
+    hostname: 'food-app'
+    container_name: 'food-app'
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    build:
+      dockerfile: Dockerfile
+      context: .
+    env_file:
+      - .env
   zookeeper:
     image: wurstmeister/zookeeper:3.4.6
     ports:
