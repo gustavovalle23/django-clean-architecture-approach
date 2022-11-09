@@ -1,11 +1,9 @@
+from json import dumps
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.forms.models import model_to_dict
-from json import dumps
-from kafka import KafkaProducer
-from datetime import datetime
-
+from confluent_kafka import Producer
 
 
 class Food(models.Model):
@@ -18,9 +16,7 @@ class Food(models.Model):
 
 @receiver(post_save, sender=Food)
 def send_to_book_system(sender, instance, created, using, **kwargs):
-    print(sender, instance, kwargs, datetime.now())
-    producer = KafkaProducer(
-        bootstrap_servers=['kafka:9092'],
-        value_serializer=lambda x: dumps(x).encode('utf-8')
-    )
-    producer.send('food.changes', value=model_to_dict(instance))
+    p = Producer({"bootstrap.servers": 'kafka:9092'})
+    msg = dumps(model_to_dict(instance))
+    p.produce('topic_test', msg)
+    p.flush()
