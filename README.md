@@ -3,5 +3,5 @@ POC - Schema Registry
 Technologies
 - [x] Django
 - [x] FastAPI
-- [ ] Express
-- [ ] NestJS
+- [ ] Express (maybe)
+- [ ] NestJS (maybe)
