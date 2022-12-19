@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "food-app"
+version = "0.1.0"
+description = ""
+authors = ["gustavovalle23 <gustavo.vallerp@hotmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^4.1.4"
+
+[tool.poetry.dev-dependencies]
+autopep8 = "^2.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
