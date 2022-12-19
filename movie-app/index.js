@@ -1,5 +1,5 @@
-const express = require('express')
-const { encodePayload, decodePayload } = require('./schema-registry-proto-service')
+import express from 'express'
+import { encodePayload, decodePayload } from './schema-registry-proto-service.js'
 
 
 const app = express()

@@ -1,6 +1,6 @@
-const { SchemaRegistry, SchemaType } = require('@kafkajs/confluent-schema-registry')
-const { readFileSync } = require('fs')
-const { join } = require('path');
+import { SchemaRegistry, SchemaType } from '@kafkajs/confluent-schema-registry';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 
 const registry = () => {
@@ -27,7 +27,7 @@ const decodePayload = async (bufferedPayload) => {
 }
 
 
-module.exports = {
+export default {
 	encodePayload,
 	decodePayload
 }

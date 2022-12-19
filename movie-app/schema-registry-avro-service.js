@@ -1,4 +1,4 @@
-const { SchemaRegistry, SchemaType } = require('@kafkajs/confluent-schema-registry')
+import { SchemaRegistry, SchemaType } from '@kafkajs/confluent-schema-registry'
 
 
 const schema = JSON.stringify({
@@ -33,7 +33,7 @@ const decodePayload = async (bufferedPayload) => {
 	return decodedValue
 }
 
-module.exports = {
+export default {
 	encodePayload,
 	decodePayload
 }
