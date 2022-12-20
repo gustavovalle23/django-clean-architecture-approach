@@ -1,8 +1,4 @@
-class ProductSerializer(object):
-
+class ProductSerializer:
     @staticmethod
     def serialize(product):
-        return {
-            'reference': product.reference,
-            'brand_id': product.brand_id
-        }
+        return {"reference": product.reference, "brand_id": product.brand_id}

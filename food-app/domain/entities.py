@@ -1,5 +1,8 @@
+from typing import Optional
+
+
 class Product:
-    def __init__(self, id: int, name: str, quantity: int) -> None:
+    def __init__(self, name: str, quantity: int, id: Optional[int] = None) -> None:
         self._id = id
         self._name = name
         self._quantity = quantity
@@ -15,3 +18,6 @@ class Product:
     @property
     def quantity(self):
         return self._quantity
+
+    def to_dict(self):
+        return {"name": self.name, "quantity": self.quantity}
