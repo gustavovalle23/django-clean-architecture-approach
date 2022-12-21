@@ -1,4 +1,5 @@
 from domain.repositories import ProductRepository
+from domain.entities import Product
 
 
 class SaveProductUseCase:
@@ -6,4 +7,5 @@ class SaveProductUseCase:
         self.product_repository = product_repository
 
     def execute(self, name: str, quantity: int):
-        return self.product_repository.save(name=name, quantity=quantity)
+        product = Product(name, quantity)
+        return self.product_repository.save(product)

@@ -1,5 +1,5 @@
-from django_app.models import ProductModel
 from domain.entities import Product
+from django_app.models import ProductModel
 
 
 class DjangoProductRepository:

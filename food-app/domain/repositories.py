@@ -5,6 +5,6 @@ from domain.entities import Product
 
 class ProductRepository(ABC):
     @abstractmethod
-    def save(self, name: str, quantity: int) -> Product:
+    def save(self, product) -> Product:
         """responsable for save product model"""
         pass

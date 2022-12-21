@@ -8,6 +8,7 @@ authors = ["gustavovalle23 <gustavo.vallerp@hotmail.com>"]
 python = "^3.10"
 Django = "^4.1.4"
 pre-commit = "^2.20.0"
+djangorestframework = "^3.14.0"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^2.0.1"

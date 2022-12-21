@@ -1,4 +1,7 @@
+from domain.entities import Product
+
+
 class ProductSerializer:
     @staticmethod
-    def serialize(product):
-        return {"reference": product.reference, "brand_id": product.brand_id}
+    def serialize(product: Product):
+        return {"id": product.id, "name": product.name, "quantity": product.quantity}
