@@ -1,0 +1,1 @@
+POC - Schema Registry
