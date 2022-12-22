@@ -15,9 +15,8 @@ save_product_use_case = SaveProductUseCase(repository)
 
 @api_view(["POST"])
 def create_product(request):
-    req_data = json.loads(request.body)
     product = save_product_use_case.execute(
-        name=req_data.get("name"), quantity=req_data.get("quantity")
+        name=request.data.get("name"), quantity=request.data.get("quantity")
     )
 
     response = ProductSerializer.serialize(product)
