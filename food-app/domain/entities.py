@@ -1,23 +1,35 @@
 from typing import Optional
+from datetime import datetime
+from dataclasses import dataclass, field
+
+from domain.errors import EntityValidationException
+from domain.validators import FoodValidatorFactory
 
 
+@dataclass(frozen=True)
 class Product:
-    def __init__(self, name: str, quantity: int, id: Optional[int] = None) -> None:
-        self._id = id
-        self._name = name
-        self._quantity = quantity
+    name: str
+    id: Optional[int] = None
+    quantity: Optional[int] = 1
+    is_active: Optional[bool] = True
+    created_at: Optional[datetime] = field(default_factory=datetime.now)
 
-    @property
-    def id(self):
-        return self._id
+    def __post__init__(self):
+        if not self.created_at:
+            self._set("created_at", datetime.now())
+        self.validate()
 
-    @property
-    def name(self):
-        return self._name
+    def increment_quantity(self, quantity: int) -> int:
+        if quantity > 0:
+            self._set("quantity", self.quantity + quantity)
+        return self.quantity
 
-    @property
-    def quantity(self):
-        return self._quantity
+    def validate(self):
+        validator = FoodValidatorFactory.create()
+        is_valid = validator.validate(self.to_dict())
+
+        if not is_valid:
+            raise EntityValidationException(validator.errors)
 
     def to_dict(self):
-        return {"name": self.name, "quantity": self.quantity}
+        return {"id": self.id, "name": self.name, "quantity": self.quantity}
