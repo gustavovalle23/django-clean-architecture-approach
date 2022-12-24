@@ -7,7 +7,7 @@ class MockRepository:
 
     def save(self, product: Product):
         self.called_times += 1
-        return Product(product.name, product.quantity, 123)
+        return Product(product.name, 123, product.quantity)
 
 
 def test_should_execute_save_product_use_case():
@@ -20,3 +20,4 @@ def test_should_execute_save_product_use_case():
     assert result.id is not None
     assert result.name == product.name
     assert result.quantity == product.quantity
+    assert mock_repository.called_times == 1

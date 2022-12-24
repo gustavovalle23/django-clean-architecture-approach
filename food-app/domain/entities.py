@@ -14,7 +14,7 @@ class Product:
     is_active: Optional[bool] = True
     created_at: Optional[datetime] = field(default_factory=datetime.now)
 
-    def __post__init__(self):
+    def __post_init__(self):
         if not self.created_at:
             self._set("created_at", datetime.now())
         self.validate()
