@@ -5,6 +5,10 @@ class EntityDoesNotExist(Exception):
     pass
 
 
+class EntityAlreadyExist(Exception):
+    pass
+
+
 ErrorFields = Dict[str, List[str]]
 
 

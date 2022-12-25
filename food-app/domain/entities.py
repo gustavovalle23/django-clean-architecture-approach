@@ -9,8 +9,8 @@ from domain.validators import FoodValidatorFactory
 @dataclass(frozen=True)
 class Product:
     name: str
-    id: Optional[int] = None
     quantity: Optional[int] = 1
+    id: Optional[int] = None
     is_active: Optional[bool] = True
     created_at: Optional[datetime] = field(default_factory=datetime.now)
 

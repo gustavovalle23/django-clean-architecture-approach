@@ -1,24 +1,14 @@
-import json
-from rest_framework import status
+from typing import Optional
+from rest_framework.views import APIView
+from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from django_app.factories import ProductViewFactory
 
 
-from django_app.repositories import DjangoProductRepository
-from application.use_cases import SaveProductUseCase
-from api.serializers import ProductSerializer
+class ViewWrapper(APIView):
+    view_factory: Optional[ProductViewFactory] = None
 
+    def post(self, request: Request, *args, **kwargs):
+        body, status = self.view_factory.create().post(request.POST)
 
-repository = DjangoProductRepository()
-save_product_use_case = SaveProductUseCase(repository)
-
-
-@api_view(["POST"])
-def create_product(request):
-    product = save_product_use_case.execute(
-        name=request.data.get("name"), quantity=request.data.get("quantity")
-    )
-
-    response = ProductSerializer.serialize(product)
-
-    return Response(response, status=status.HTTP_201_CREATED)
+        return Response(body, status=status)
