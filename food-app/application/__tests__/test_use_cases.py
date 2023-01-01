@@ -1,6 +1,6 @@
 import unittest
 
-from application.use_cases import SaveProductUseCase
+from application.use_cases import CreateProductUseCase
 from domain.entities import Product
 
 
@@ -12,12 +12,12 @@ class MockRepository:
         return Product(product.name, product.quantity, 123)
 
 
-class TestSaveProductUseCase(unittest.TestCase):
-    def test_should_execute_save_product_use_case(self):
+class TestCreateProductUseCase(unittest.TestCase):
+    def test_should_execute_create_product_use_case(self):
         mock_repository = MockRepository()
         product = Product("Product Test", 5)
 
-        use_case = SaveProductUseCase(mock_repository)
+        use_case = CreateProductUseCase(mock_repository)
         result = use_case.execute(product.name, product.quantity)
 
         assert result.id is not None

@@ -2,7 +2,7 @@ from domain.repositories import ProductRepository
 from domain.entities import Product
 
 
-class SaveProductUseCase:
+class CreateProductUseCase:
     def __init__(self, product_repository: ProductRepository) -> None:
         self.product_repository = product_repository
 
