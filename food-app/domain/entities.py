@@ -2,12 +2,13 @@ from typing import Optional
 from datetime import datetime
 from dataclasses import dataclass, field
 
+from __seedwork.domain.entity import Entity
 from domain.errors import EntityValidationException
-from domain.validators import FoodValidatorFactory
+from domain.validators import ProductValidatorFactory
 
 
 @dataclass(frozen=True)
-class Product:
+class Product(Entity):
     name: str
     quantity: Optional[int] = 1
     id: Optional[int] = None
@@ -24,8 +25,14 @@ class Product:
             self._set("quantity", self.quantity + quantity)
         return self.quantity
 
+    def activate(self):
+        self._set("is_active", True)
+
+    def deactivate(self):
+        self._set("is_active", False)
+
     def validate(self):
-        validator = FoodValidatorFactory.create()
+        validator = ProductValidatorFactory.create()
         is_valid = validator.validate(self.to_dict())
 
         if not is_valid:

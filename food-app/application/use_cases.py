@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from domain.repositories import ProductRepository
 from domain.entities import Product
 
@@ -8,4 +10,8 @@ class CreateProductUseCase:
 
     def execute(self, name: str, quantity: int) -> Product:
         product = Product(name, quantity)
+
+        if datetime.today().weekday() in (4, 5, 6):
+            product.deactivate()
+
         return self.product_repository.save(product)
