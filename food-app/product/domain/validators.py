@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from domain.errors import ErrorFields
+from product.domain.errors import ErrorFields
 
 
 class ProductValidator:

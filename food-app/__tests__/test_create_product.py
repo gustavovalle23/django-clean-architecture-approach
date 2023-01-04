@@ -1,7 +1,7 @@
 import pytest
 from rest_framework.test import APIClient
 
-from domain.entities import Product
+from product.domain.entities import Product
 
 
 @pytest.fixture

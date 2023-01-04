@@ -1,6 +1,6 @@
 from django.db import models
 
-from domain.entities import Product
+from product.domain.entities import Product
 
 
 class ProductModel(models.Model):

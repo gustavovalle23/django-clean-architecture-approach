@@ -1,8 +1,8 @@
 import unittest
 from freezegun import freeze_time
 
-from application.use_cases import CreateProductUseCase
-from domain.entities import Product
+from product.application.use_cases import CreateProductUseCase
+from product.domain.entities import Product
 
 
 class MockRepository:

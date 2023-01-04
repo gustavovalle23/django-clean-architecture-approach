@@ -1,8 +1,8 @@
 from typing import Dict, Any
 
-from application.serializers import ProductSerializer
-from application.use_cases import CreateProductUseCase
-from domain.errors import EntityAlreadyExist
+from product.application.serializers import ProductSerializer
+from product.application.use_cases import CreateProductUseCase
+from product.domain.errors import EntityAlreadyExist
 
 
 class ProductView:
