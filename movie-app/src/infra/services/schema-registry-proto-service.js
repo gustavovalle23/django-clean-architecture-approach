@@ -9,12 +9,12 @@ const registry = () => {
 
 const encodePayload = async (payload) => {
 	const schemaRegistry = registry()
-	const schema = readFileSync(join(__dirname, './book.proto')).toString();
+	const schema = readFileSync(join(__dirname, './movie.proto')).toString();
 
 	const { id } = await schemaRegistry.register({
 		schema,
 		type: SchemaType.PROTOBUF
-	}, { subject: 'Proto:Book' });
+	}, { subject: 'Proto:Movie' });
 
 	const encodedValue = await schemaRegistry.encode(id, payload)
 	return encodedValue
