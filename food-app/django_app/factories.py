@@ -1,6 +1,6 @@
-from application.use_cases import CreateProductUseCase
-from django_app.repositories import DjangoProductRepository
-from application.views import ProductView
+from product.application.use_cases import CreateProductUseCase
+from product.infra.repositories import DjangoProductRepository
+from product.application.views import ProductView
 
 
 class ProductRepoFactory:

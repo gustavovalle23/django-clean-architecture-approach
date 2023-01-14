@@ -12,7 +12,7 @@ services:
       dockerfile: Dockerfile
       context: .
     networks:
-      - local-network
+      - network-movie-app
     env_file:
       - .env
     extra_hosts:
@@ -39,7 +39,7 @@ services:
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
     networks:
-      - local-network
+      - network-movie-app
 
   schema-registry:
     image: 'confluentinc/cp-schema-registry:7.0.1'
@@ -51,8 +51,8 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: 'schema-registry'
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:9093"
     networks:
-      - local-network
+      - network-movie-app
 
 networks:
-  local-network:
+  network-movie-app:
     name: network-movie-app

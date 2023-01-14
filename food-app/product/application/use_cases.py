@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from domain.repositories import ProductRepository
-from domain.entities import Product
+from product.domain.repositories import ProductRepository
+from product.domain.entities import Product
 
 
 class CreateProductUseCase:

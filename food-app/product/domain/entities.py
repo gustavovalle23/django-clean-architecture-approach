@@ -3,8 +3,8 @@ from datetime import datetime
 from dataclasses import dataclass, field
 
 from __seedwork.domain.entity import Entity
-from domain.errors import EntityValidationException
-from domain.validators import ProductValidatorFactory
+from product.domain.errors import EntityValidationException
+from product.domain.validators import ProductValidatorFactory
 
 
 @dataclass(frozen=True)

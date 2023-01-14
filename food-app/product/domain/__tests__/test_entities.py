@@ -1,8 +1,8 @@
 import unittest
-from unittest.mock import patch
 from datetime import datetime
+from unittest.mock import patch
 
-from domain.entities import Product
+from product.domain.entities import Product
 
 
 class TestProductUnit(unittest.TestCase):
