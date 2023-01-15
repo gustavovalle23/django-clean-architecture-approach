@@ -111,6 +111,14 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "djangogrpcframework"
+version = "0.2.1"
+description = "gRPC for Django."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "djangorestframework"
 version = "3.14.0"
 description = "Web APIs for Django, made easy."
@@ -441,7 +449,7 @@ testing = ["coverage (>=6.2)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "37aa9aaa6bacf60a9470dadb7506c0484f048f9c4aae89d7d013d4ff4e880ba6"
+content-hash = "6cebf89f22a534c8c2c4388f7229116b3213bfdef10a38d7f9821ad4eeb9a306"
 
 [metadata.files]
 asgiref = [
@@ -489,6 +497,10 @@ distlib = [
 django = [
     {file = "Django-4.1.4-py3-none-any.whl", hash = "sha256:0b223bfa55511f950ff741983d408d78d772351284c75e9f77d2b830b6b4d148"},
     {file = "Django-4.1.4.tar.gz", hash = "sha256:d38a4e108d2386cb9637da66a82dc8d0733caede4c83c4afdbda78af4214211b"},
+]
+djangogrpcframework = [
+    {file = "djangogrpcframework-0.2.1-py2.py3-none-any.whl", hash = "sha256:c1835bd87ac9bdbdbdb631cd1c12720e711260d316303d19e4c63e53896ff0e6"},
+    {file = "djangogrpcframework-0.2.1.tar.gz", hash = "sha256:f96ae98d463f02745dbac5c18899801b738c79efd198e8cc709a7476533aec97"},
 ]
 djangorestframework = [
     {file = "djangorestframework-3.14.0-py3-none-any.whl", hash = "sha256:eb63f58c9f218e1a7d064d17a70751f528ed4e1d35547fdade9aaf4cd103fd08"},

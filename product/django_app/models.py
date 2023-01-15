@@ -1,4 +1,6 @@
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 from product.domain.entities import Product
 
@@ -21,3 +23,11 @@ class ProductModel(models.Model):
         db_table = "products"
         verbose_name = "Product"
         verbose_name_plural = "Products"
+
+
+@receiver(post_save, sender=ProductModel)
+def change_product_handler(sender: ProductModel, **kwargs):
+    from proto.serializers import ProductSerializer
+
+    serializer = ProductSerializer(sender)
+    # sending serializer to kafka topic...
