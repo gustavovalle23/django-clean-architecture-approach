@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "product"
+version = "0.1.0"
+description = ""
+authors = ["gustavovalle23 <gustavo.vallerp@hotmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^4.1.4"
+pre-commit = "^2.20.0"
+djangorestframework = "^3.14.0"
+pytest = "^7.2.0"
+pytest-django = "^4.5.2"
+
+[tool.poetry.dev-dependencies]
+autopep8 = "^2.0.1"
+mypy = "^0.991"
+flake8 = "^6.0.0"
+black = "^22.12.0"
+pre-commit = "^2.20.0"
+freezegun = "^1.2.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
