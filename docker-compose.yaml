@@ -1,37 +1,27 @@
 version: '3.5'
 
 services:
-  movie:
-    hostname: 'movie-app'
-    container_name: 'movie-app'
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/movie
+  app:
+    hostname: 'product'
+    container_name: 'product-app'
     build:
-      dockerfile: movie-app/Dockerfile
+      dockerfile: product/Dockerfile
       context: .
     networks:
       - local-network
+    ports:
+      - "8080:8080"
     env_file:
       - .env
-    extra_hosts:
-      - "host.docker.internal:172.17.0.1"
-
-  # user:
-  #   hostname: 'user-app'
-  #   container_name: 'user-app'
-  #   volumes:
-  #     - .:/user
-  #   build:
-  #     dockerfile: Dockerfile.user
-  #     context: .
-  #   networks:
-  #     - local-network
-  #   env_file:
-  #     - .env
-  #   extra_hosts:
-  #     - "host.docker.internal:172.17.0.1"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_USER_PWD: postgres
+      POSTGRES_HOST: postgres
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
 
   kafka:
     image: 'vectorized/redpanda:v21.11.14'
@@ -67,6 +57,18 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:9093"
     networks:
       - local-network
+
+  postgres:
+    container_name: postgres-app
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - local-network
+    restart: unless-stopped
 
 networks:
   local-network:
