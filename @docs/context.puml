@@ -3,22 +3,9 @@
 
 title Component Diagram for POC - Schema Registry
 
-Person(user, "User", "user who wants to access some of his hobbies")
+Container(product, "Product App", "Django", "API that represents all its products", $tags="v0.1")
+Container(supplier, "Supplier App", "FastAPI", "API that represents all its suppliers", $tags="v0.1")
 
-Container(food, "Food App", "Django", "API that represents all its foods", $tags="v0.1")
-Container(movie, "Movie App", "NodeJS", "API that represents all its movies", $tags="v0.1")
-Container(book, "Book App", "NestJS", "API that represents all its books", $tags="v0.1")
-
-Rel(user, food, "Uses", "http/https")
-Rel(user, movie, "Uses", "http/https")
-Rel(user, book, "Uses", "http/https")
-
-Rel_R(food, movie, "talk to", "kafka/grcp")
-Rel_R(food, book, "talk to", "kafka/grcp")
-Rel_R(movie, book, "talk to", "kafka/grcp")
-Rel_R(movie, food, "talk to", "kafka/grcp")
-Rel_R(book, food, "talk to", "kafka/grcp")
-Rel_R(book, movie, "talk to", "kafka/grcp")
-
+Rel(product, supplier, "talk to", "kafka")
 
 @enduml
