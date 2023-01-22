@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from supplier.app.__seedwork.domain.entities import Entity
+from app.__seedwork.domain.entities import Entity
 
 
-@dataclass
-class Suplier(Entity):
+@dataclass(frozen=True)
+class Supplier(Entity):
     name: str
