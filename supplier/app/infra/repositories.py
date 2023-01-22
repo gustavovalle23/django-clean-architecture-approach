@@ -1,0 +1,2 @@
+class SuplierRepository:
+    pass
