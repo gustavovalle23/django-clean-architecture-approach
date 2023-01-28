@@ -1,16 +1,38 @@
 version: '3.5'
 
 services:
-  app:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - local-network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    container_name: grafana
+    depends_on:
+      - prometheus
+    networks:
+      - local-network
+
+  product:
     hostname: 'product'
     container_name: 'product-app'
     build:
-      dockerfile: product/Dockerfile
-      context: .
+      dockerfile: ./Dockerfile
+      context: ./product/
     networks:
       - local-network
     ports:
-      - "8080:8080"
+      - "8000:8000"
     env_file:
       - .env
     environment:
@@ -21,42 +43,42 @@ services:
     depends_on:
       - postgres
     volumes:
-      - .:/app
+      - ./product/:/app
 
-  kafka:
-    image: 'vectorized/redpanda:v21.11.14'
-    hostname: "kafka"
-    container_name: "kafka"
-    command:
-      - redpanda
-      - start
-      - --smp
-      - '1'
-      - --reserve-memory
-      - 0M
-      - --overprovisioned
-      - --node-id
-      - '0'
-      - --kafka-addr
-      - INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094,PLAINTEXT://0.0.0.0:9093
-      - --advertise-kafka-addr
-      - INTERNAL://kafka:9092,OUTSIDE://host.docker.internal:9094,PLAINTEXT://kafka:9093
-    extra_hosts:
-      - "host.docker.internal:172.17.0.1"
-    networks:
-      - local-network
+  # kafka:
+  #   image: 'vectorized/redpanda:v21.11.14'
+  #   hostname: "kafka"
+  #   container_name: "kafka"
+  #   command:
+  #     - redpanda
+  #     - start
+  #     - --smp
+  #     - '1'
+  #     - --reserve-memory
+  #     - 0M
+  #     - --overprovisioned
+  #     - --node-id
+  #     - '0'
+  #     - --kafka-addr
+  #     - INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094,PLAINTEXT://0.0.0.0:9093
+  #     - --advertise-kafka-addr
+  #     - INTERNAL://kafka:9092,OUTSIDE://host.docker.internal:9094,PLAINTEXT://kafka:9093
+  #   extra_hosts:
+  #     - "host.docker.internal:172.17.0.1"
+  #   networks:
+  #     - local-network
 
-  schema-registry:
-    image: 'confluentinc/cp-schema-registry:7.0.1'
-    hostname: "schema-registry"
-    container_name: "schema-registry"
-    depends_on:
-      - kafka
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: 'schema-registry'
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:9093"
-    networks:
-      - local-network
+  # schema-registry:
+  #   image: 'confluentinc/cp-schema-registry:7.0.1'
+  #   hostname: "schema-registry"
+  #   container_name: "schema-registry"
+  #   depends_on:
+  #     - kafka
+  #   environment:
+  #     SCHEMA_REGISTRY_HOST_NAME: 'schema-registry'
+  #     SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:9093"
+  #   networks:
+  #     - local-network
 
   postgres:
     container_name: postgres-app

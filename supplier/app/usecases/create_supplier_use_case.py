@@ -15,7 +15,7 @@ class Output:
     name: str
 
 
-class CreateSupplierUseCase(UseCase):
+class CreateSupplierUseCase(UseCase[Input, Output]):
     def __init__(self, supplier_repository: SupplierRepository) -> None:
         self.supplier_repository = supplier_repository
 

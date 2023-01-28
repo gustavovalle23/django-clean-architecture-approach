@@ -13,6 +13,8 @@ pytest = "^7.2.0"
 pytest-django = "^4.5.2"
 protobuf = ">=3.20.0,<3.21.0"
 djangogrpcframework = "^0.2.1"
+black = "^22.12.0"
+django-prometheus = "^2.2.0"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^2.0.1"

@@ -1,11 +1,12 @@
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django_prometheus.models import ExportModelOperationsMixin
 
 from product.domain.entities import Product
 
 
-class ProductModel(models.Model):
+class ProductModel(ExportModelOperationsMixin('product'), models.Model):
     name: str = models.CharField(max_length=100)
     quantity: int = models.IntegerField()
 
