@@ -1,12 +1,14 @@
 from abc import ABC
-from typing import Any
+from typing import Any, Generic, TypeVar
 from dataclasses import Field, dataclass, asdict
+
+Identifier = TypeVar("Identifier")
 
 
 @dataclass(frozen=True)
-class Entity(ABC):
+class Entity(Generic[Identifier], ABC):
 
-    id: int
+    id: Identifier
 
     def _set(self, name: str, value: Any):
         object.__setattr__(self, name, value)

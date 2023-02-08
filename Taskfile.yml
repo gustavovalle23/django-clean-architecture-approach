@@ -8,14 +8,18 @@ vars:
   RUN_CMD: "docker-compose up -d {{.LOCAL_SERVICES}}"
   STOP_CMD: "docker-compose down -v"
   LOGS_CMD: "docker-compose logs -f --tail=500"
-  BASH_PRODUCT_CMD: "docker exec -it product-app sh"
-  LOGS_PRODUCT_CMD: "docker-compose logs -f --tail=500 product-app"
+  BASH_PRODUCT_CMD: "docker exec -it product sh"
+  LOGS_PRODUCT_CMD: "docker-compose logs -f --tail=500 product"
 
 tasks:
   run:
-    desc: Execute local project
+    desc: Build and Execute local project
     cmds:
       - task: build
+      - '{{.RUN_CMD}}'
+  up:
+    desc: Execute local project
+    cmds:
       - '{{.RUN_CMD}}'
   build:
     desc: Build container

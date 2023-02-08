@@ -1,10 +1,11 @@
 from django_grpc_framework.proto_serializers import ModelSerializer
 
 from django_app.models import ProductModel
-from proto import product_pb2
+from proto.product_pb2 import Product
 
 
 class ProductSerializer(ModelSerializer):
     class Meta:
         model = ProductModel
-        proto_class = product_pb2.Product
+        proto_class = Product
+        fields = ['id', 'name', 'quantity']

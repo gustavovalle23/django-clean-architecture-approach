@@ -31,4 +31,4 @@ def change_product_handler(sender: ProductModel, **kwargs):
     from proto.serializers import ProductSerializer
 
     serializer = ProductSerializer(sender)
-    # sending serializer to kafka topic...
+    print('serializer', serializer)

@@ -8,7 +8,8 @@ RUN pip install --upgrade pip
 
 COPY . .
 
+RUN pip install -r requirements.txt
+
 ENV ENV $env
 
-ENTRYPOINT ["tail"]
-CMD ["-f","/dev/null"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -25,7 +25,7 @@ services:
 
   product:
     hostname: 'product'
-    container_name: 'product-app'
+    container_name: 'product'
     build:
       dockerfile: ./Dockerfile
       context: ./product/
@@ -45,40 +45,41 @@ services:
     volumes:
       - ./product/:/app
 
-  # kafka:
-  #   image: 'vectorized/redpanda:v21.11.14'
-  #   hostname: "kafka"
-  #   container_name: "kafka"
-  #   command:
-  #     - redpanda
-  #     - start
-  #     - --smp
-  #     - '1'
-  #     - --reserve-memory
-  #     - 0M
-  #     - --overprovisioned
-  #     - --node-id
-  #     - '0'
-  #     - --kafka-addr
-  #     - INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094,PLAINTEXT://0.0.0.0:9093
-  #     - --advertise-kafka-addr
-  #     - INTERNAL://kafka:9092,OUTSIDE://host.docker.internal:9094,PLAINTEXT://kafka:9093
-  #   extra_hosts:
-  #     - "host.docker.internal:172.17.0.1"
-  #   networks:
-  #     - local-network
 
-  # schema-registry:
-  #   image: 'confluentinc/cp-schema-registry:7.0.1'
-  #   hostname: "schema-registry"
-  #   container_name: "schema-registry"
-  #   depends_on:
-  #     - kafka
-  #   environment:
-  #     SCHEMA_REGISTRY_HOST_NAME: 'schema-registry'
-  #     SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:9093"
-  #   networks:
-  #     - local-network
+  kafka:
+    image: 'vectorized/redpanda:v21.11.14'
+    hostname: "kafka"
+    container_name: "kafka"
+    command:
+      - redpanda
+      - start
+      - --smp
+      - '1'
+      - --reserve-memory
+      - 0M
+      - --overprovisioned
+      - --node-id
+      - '0'
+      - --kafka-addr
+      - INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094,PLAINTEXT://0.0.0.0:9093
+      - --advertise-kafka-addr
+      - INTERNAL://kafka:9092,OUTSIDE://host.docker.internal:9094,PLAINTEXT://kafka:9093
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+    networks:
+      - local-network
+
+  schema-registry:
+    image: 'confluentinc/cp-schema-registry:7.0.1'
+    hostname: "schema-registry"
+    container_name: "schema-registry"
+    depends_on:
+      - kafka
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: 'schema-registry'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:9093"
+    networks:
+      - local-network
 
   postgres:
     container_name: postgres-app
