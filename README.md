@@ -1,4 +1,4 @@
-POC - Schema Registry
+gRPC Python Example
 
 Technologies
 - [x] Django
