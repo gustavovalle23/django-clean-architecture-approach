@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'django_prometheus',
     "django_app",
+    "django_grpc_framework",
     "rest_framework",
 ]
 

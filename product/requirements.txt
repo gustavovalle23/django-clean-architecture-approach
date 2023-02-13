@@ -15,6 +15,7 @@ flake8==6.0.0
 freezegun==1.2.2
 identify==2.5.11
 iniconfig==1.1.1
+kafka-python==2.0.2
 mccabe==0.7.0
 mypy==0.991
 mypy-extensions==0.4.3

@@ -2,8 +2,25 @@ syntax = "proto3";
 
 package product;
 
-message Product {
-  int64 id = 1;
-  string name = 2;
-  int64 quantity = 3;
+import "google/protobuf/empty.proto";
+
+service ProductModelController {
+    rpc List(ProductModelListRequest) returns (stream ProductModel) {}
+    rpc Create(ProductModel) returns (ProductModel) {}
+    rpc Retrieve(ProductModelRetrieveRequest) returns (ProductModel) {}
+    rpc Update(ProductModel) returns (ProductModel) {}
+    rpc Destroy(ProductModel) returns (google.protobuf.Empty) {}
+}
+
+message ProductModel {
+    int64 id = 1;
+    string name = 2;
+    int32 quantity = 3;
+}
+
+message ProductModelListRequest {
+}
+
+message ProductModelRetrieveRequest {
+    int64 id = 1;
 }
