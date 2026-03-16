@@ -16,7 +16,7 @@ It serves as a template for building maintainable, testable Django services wher
 
 | Category        | Stack                          |
 |----------------|---------------------------------|
-| **Framework**  | Django 4.x, Django REST Framework |
+| **Framework**  | Django 4.2 LTS, Django REST Framework |
 | **API**        | REST, gRPC (django-grpc-framework) |
 | **Database**   | PostgreSQL                      |
 | **Messaging**  | Kafka (Redpanda), Schema Registry |
@@ -130,25 +130,25 @@ Ensure `DJANGO_SETTINGS_MODULE=setup.settings` is set (pytest.ini already sets i
 
 ---
 
-## Project structure (Clean Architecture)
+## Project structure (Clean Architecture + event-driven)
 
 ```
 product/
 ├── manage.py
 ├── setup/                 # Django project (settings, urls, wsgi)
 ├── product/               # Core (Clean Architecture)
-│   ├── domain/            # Entities, value objects, validators, errors
-│   ├── application/       # Use cases, DTOs, ports (interfaces)
-│   └── infra/             # Repository implementations (e.g. Django ORM)
-├── django_app/            # Django app: models, admin, HTTP/gRPC adapters
+│   ├── domain/            # Entities, validators, errors, domain events (no framework)
+│   ├── application/       # Use cases, commands, DTOs, ports (EventPublisher, Repository)
+│   └── infra/             # Repository and event-publisher implementations
+├── django_app/            # Thin Django adapter: models, views, factories (composition)
 ├── proto/                 # gRPC protos and generated code
 └── __tests__/             # Integration/API tests
 ```
 
-- **Domain**: business rules and entities (e.g. `Product`).
-- **Application**: use cases that orchestrate domain and call repositories.
-- **Infra**: concrete implementations (DB, Kafka, etc.).
-- **django_app**: adapters that expose use cases via REST and gRPC.
+- **Domain**: pure business logic—entities (`Product`), validators, domain events (`ProductCreated`, `ProductDeactivated`). No Django or framework imports.
+- **Application**: use cases (e.g. `CreateProductUseCase`) that orchestrate domain and ports; command DTOs; event publishing for event-driven design.
+- **Infra**: concrete implementations (Django repository, logging event publisher); replace with Kafka publisher in production if needed.
+- **django_app**: thin adapter—REST view parses request, calls use case, returns response; dependency composition in `factories`.
 
 ---
 

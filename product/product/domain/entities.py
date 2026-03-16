@@ -1,42 +1,56 @@
-from typing import Optional
+"""Domain entities. Business logic only, no framework dependencies."""
+
+from dataclasses import dataclass
 from datetime import datetime
-from dataclasses import dataclass, field
+from typing import Optional
 
-from __seedwork.domain.entity import Entity
-from product.domain.errors import EntityValidationException
-from product.domain.validators import ProductValidatorFactory
+from product.domain.errors import EntityValidationError
+from product.domain.validators import validate_product_data
 
 
-@dataclass(frozen=True)
-class Product(Entity):
+@dataclass
+class Product:
+    """
+    Product aggregate root. All product business rules live here.
+    Immutable-friendly: mutating methods return new state (we use in-place for simplicity).
+    """
+
     name: str
-    quantity: Optional[int] = 1
+    quantity: int = 1
     id: Optional[int] = None
-    is_active: Optional[bool] = True
-    created_at: Optional[datetime] = field(default_factory=datetime.now)
+    is_active: bool = True
+    created_at: Optional[datetime] = None
 
-    def __post_init__(self):
-        if not self.created_at:
-            self._set("created_at", datetime.now())
-        self.validate()
+    def __post_init__(self) -> None:
+        if self.created_at is None:
+            object.__setattr__(self, "created_at", datetime.now())
+        self._validate()
 
-    def increment_quantity(self, quantity: int) -> int:
-        if quantity > 0:
-            self._set("quantity", self.quantity + quantity)
-        return self.quantity
-
-    def activate(self):
-        self._set("is_active", True)
-
-    def deactivate(self):
-        self._set("is_active", False)
-
-    def validate(self):
-        validator = ProductValidatorFactory.create()
-        is_valid = validator.validate(self.to_dict())
-
+    def _validate(self) -> None:
+        is_valid, errors = validate_product_data(
+            {"name": self.name, "quantity": self.quantity}
+        )
         if not is_valid:
-            raise EntityValidationException(validator.errors)
+            raise EntityValidationError(errors)
 
-    def to_dict(self):
-        return {"id": self.id, "name": self.name, "quantity": self.quantity}
+    def increment_quantity(self, delta: int) -> None:
+        """Business rule: only positive increments."""
+        if delta <= 0:
+            return
+        object.__setattr__(self, "quantity", self.quantity + delta)
+
+    def activate(self) -> None:
+        object.__setattr__(self, "is_active", True)
+
+    def deactivate(self) -> None:
+        object.__setattr__(self, "is_active", False)
+
+    def to_dict(self) -> dict:
+        """Minimal DTO for serialization."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "quantity": self.quantity,
+            "is_active": self.is_active,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }

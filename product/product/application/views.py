@@ -1,24 +1,39 @@
-from typing import Dict, Any
+"""
+Application-level view logic. Maps HTTP input to commands and use case results to HTTP output.
+No Django request/response objects; pure dict in, (dict, int) out. Testable without Django.
+"""
 
-from product.application.serializers import ProductSerializer
+from typing import Any, Dict, Tuple
+
 from product.application.use_cases import CreateProductUseCase
-from product.domain.errors import EntityAlreadyExist
+from product.application.commands import CreateProductCommand
+from product.domain.errors import EntityValidationError, EntityAlreadyExists
 
 
-class ProductView:
-    def __init__(self, create_product_use_case: CreateProductUseCase):
-        self.create_product_use_case = create_product_use_case
+def create_product(
+    use_case: CreateProductUseCase,
+    payload: Dict[str, Any],
+) -> Tuple[Dict[str, Any], int]:
+    """
+    Handle create-product request. Returns (response_body, status_code).
+    """
+    name = payload.get("name") or ""
+    quantity = payload.get("quantity", 1)
+    try:
+        if isinstance(quantity, str) and quantity.isdigit():
+            quantity = int(quantity)
+    except (TypeError, ValueError):
+        quantity = 1
 
-    def post(self, request: Dict[str, Any]):
-        name = request.get("name")
-        quantity = request.get("quantity")
+    try:
+        command = CreateProductCommand(name=name.strip(), quantity=quantity)
+    except Exception:
+        return {"error": "Invalid input."}, 400
 
-        try:
-            product = self.create_product_use_case.execute(name, quantity)
-        except EntityAlreadyExist:
-            body = {"error": "Product already exists!"}
-            status = 412
-        else:
-            body = ProductSerializer.serialize(product)
-            status = 201
-        return body, status
+    try:
+        result = use_case.execute(command)
+        return result.to_dict(), 201
+    except EntityValidationError as e:
+        return {"error": "Validation failed.", "details": e.errors}, 422
+    except EntityAlreadyExists:
+        return {"error": "Product already exists."}, 409

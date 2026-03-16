@@ -1,12 +1,12 @@
+"""Integration tests: HTTP endpoint -> use case -> DB."""
+
 import pytest
 from rest_framework.test import APIClient
-
-from product.domain.entities import Product
 
 
 @pytest.fixture
 def api_client():
-    return APIClient
+    return APIClient()
 
 
 pytestmark = pytest.mark.django_db
@@ -15,16 +15,15 @@ pytestmark = pytest.mark.django_db
 class TestProductEndpoints:
     endpoint = "/product/"
 
-    def test_create(self, api_client: APIClient):
-        product = Product("Product1", 2)
-        response = api_client().post(
-            self.endpoint, {"name": product.name, "quantity": product.quantity}
+    def test_create_returns_201_and_product(self, api_client: APIClient):
+        response = api_client.post(
+            self.endpoint,
+            {"name": "Product1", "quantity": 2},
+            format="json",
         )
-
         assert response.status_code == 201
-
-        product_response = response.json()
-
-        assert product_response.get("id") is not None
-        assert product_response.get("name") == product.name
-        assert int(product_response.get("quantity")) == product.quantity
+        data = response.json()
+        assert data.get("id") is not None
+        assert data.get("name") == "Product1"
+        assert data.get("quantity") == 2
+        assert "is_active" in data

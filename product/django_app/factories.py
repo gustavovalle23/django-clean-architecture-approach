@@ -1,23 +1,21 @@
+"""Dependency composition. Build use cases with concrete adapters."""
+
 from product.application.use_cases import CreateProductUseCase
+from product.application.ports import EventPublisher
 from product.infra.repositories import DjangoProductRepository
-from product.application.views import ProductView
+from product.infra.event_publisher import LoggingEventPublisher
 
 
-class ProductRepoFactory:
-    @staticmethod
-    def get():
-        return DjangoProductRepository()
+def get_product_repository() -> DjangoProductRepository:
+    return DjangoProductRepository()
 
 
-class CreateProductUseCaseFactory:
-    @staticmethod
-    def get():
-        product_repo = ProductRepoFactory.get()
-        return CreateProductUseCase(product_repo)
+def get_event_publisher() -> EventPublisher:
+    return LoggingEventPublisher()
 
 
-class ProductViewFactory:
-    @staticmethod
-    def create():
-        create_product_use_case = CreateProductUseCaseFactory.get()
-        return ProductView(create_product_use_case)
+def get_create_product_use_case() -> CreateProductUseCase:
+    return CreateProductUseCase(
+        product_repository=get_product_repository(),
+        event_publisher=get_event_publisher(),
+    )
